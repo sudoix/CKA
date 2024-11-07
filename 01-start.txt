@@ -1,0 +1,5 @@
+# Before working run thsi command in your terminal or put it in your .bashrc
+
+export do='--dry-run=client -o yaml'
+mkcd() { mkdir -p "$@" && cd "$@" ; }
+
