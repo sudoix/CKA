@@ -62,3 +62,18 @@ spec:
 status: {}
 ---
 
+Create pod
+
+k run nginx --image=nginx
+k run redis --image=redis --labels="app=cache"
+k run redis --image=redis --labels="app=cache" --port=6379
+k run redis --image=redis --labels="app=cache" --port=6379 --expose=true
+
+Create service
+
+k expose pod/rc/deplyment redis --port=6379 --name redis-service
+
+Create deployment
+
+k create deployment --image=nginx nginx --replicas=3
+
