@@ -77,3 +77,101 @@ Create deployment
 
 k create deployment --image=nginx nginx --replicas=3
 
+# list pod/all with selector
+k get pod -n dev --selector app=cache --no-headers
+k get all -n dev --selector app=cache --no-headers
+
+# list pod/all with additional label
+k get pod -n dev --selector app=chache,bu=finance,tier=backend --no-headers
+k get all -n dev --selector app=chache,bu=finance,tier=backend --no-headers
+
+# pod with tolerations
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bee
+  labels:
+    env: test
+spec:
+  containers:
+  - name: bee
+    image: nginx
+  tolerations:
+  - key: "spray"
+    value: mortein
+    operator: "Equal"
+    effect: "NoSchedule"
+
+# create taint
+k taint nodes NODE_NAME key=value:NoSchedule
+
+# delete taint
+k taint nodes NODE_NAME key-value:NoSchedule- # for untaint just add - at the end
+
+# scadule pod and deployment on nodes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: blue
+  name: blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: blue
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: blue
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: color
+                operator: In
+                values:
+                - blue
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: red
+  name: red
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: red
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: red
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+status: {}
