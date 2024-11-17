@@ -108,7 +108,11 @@ k taint nodes NODE_NAME key=value:NoSchedule
 # delete taint
 k taint nodes NODE_NAME key-value:NoSchedule- # for untaint just add - at the end
 
+# apply label
+k get nodes --show-labels
+k label nodes <your-node-name> disktype=ssd
 # scadule pod and deployment on nodes
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
